@@ -5,10 +5,10 @@ require('dotenv').config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: process.env.FRONTEND_URL }));
+app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
 
 // Login - redirect to Salesforce
-app.get('/auth/login', (req, res) => {
+app.get('/oauth/login', (req, res) => {          // ← FIXED: was /auth/login
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: process.env.SF_CLIENT_ID,
@@ -104,4 +104,5 @@ app.post('/api/toggle-all', async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT, () => console.log(`Backend running on port ${process.env.PORT}`));
+const PORT = process.env.PORT || 4000;          // ← FIXED: fallback to 4000
+app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
